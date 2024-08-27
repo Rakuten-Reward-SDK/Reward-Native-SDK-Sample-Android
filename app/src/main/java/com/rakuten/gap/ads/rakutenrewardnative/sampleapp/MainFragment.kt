@@ -9,6 +9,8 @@ import android.widget.ListView
 import androidx.fragment.app.ListFragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.rakuten.gap.ads.mission_core.RakutenReward
+import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
 
 /**
@@ -21,7 +23,8 @@ class MainFragment : ListFragment() {
     private lateinit var binding: FragmentMainBinding
 
     private val features = listOf(
-        FeatureItem("Login", MainFragmentDirections.goToLoginFragment()),
+        FeatureItem("Login") { navigate(MainFragmentDirections.goToLoginFragment()) },
+        FeatureItem("SDK Portal") { RakutenReward.openSDKPortal() }
     )
 
     override fun onCreateView(
@@ -42,7 +45,7 @@ class MainFragment : ListFragment() {
 
     override fun onListItemClick(l: ListView, v: View, position: Int, id: Long) {
         val selectedFeature = features[position]
-        navigate(selectedFeature.directions)
+        selectedFeature.directions.invoke()
     }
 
     private fun navigate(directions: NavDirections) {
@@ -50,7 +53,9 @@ class MainFragment : ListFragment() {
     }
 }
 
+typealias ClickEvent = () -> Unit
+
 data class FeatureItem(
     val name: String,
-    val directions: NavDirections
+    val directions: ClickEvent
 )
