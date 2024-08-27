@@ -27,6 +27,11 @@ android {
             )
         }
     }
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -43,6 +48,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // Rakuten Reward SDK
+    implementation(libs.rewardsdknative.ui)
 
     //====== Jetpack Navigation ============
     implementation(libs.androidx.navigation.fragment.ktx)
