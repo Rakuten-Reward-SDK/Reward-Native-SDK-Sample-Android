@@ -1,11 +1,12 @@
 package com.rakuten.gap.ads.rakutenrewardnative.sampleapp.login
 
-import android.content.Intent
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.IAuthService
-import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.internal.SdkAuthService
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.rae.UserSdkAuth
 import kotlinx.coroutines.launch
 
 /**
@@ -15,6 +16,9 @@ import kotlinx.coroutines.launch
  * Copyright © 2024 Rakuten Asia. All rights reserved.
  */
 class LoginViewModel(private val authService: IAuthService) : ViewModel() {
+    private val _accessTokenLiveData = MutableLiveData<String>()
+    val accessTokenLiveData: LiveData<String>
+        get() = _accessTokenLiveData
 
     fun login() {
         viewModelScope.launch { authService.login() }
@@ -24,8 +28,14 @@ class LoginViewModel(private val authService: IAuthService) : ViewModel() {
         viewModelScope.launch { authService.logout() }
     }
 
-    fun handleActivityResult(data: Intent?) {
-        (authService as SdkAuthService).handleActivityResult(data)
+    fun isLoggedIn() = authService.isLoggedIn()
+
+    fun getAccessToken() {
+        viewModelScope.launch {
+            (authService as UserSdkAuth).getAccessToken()?.let {
+                _accessTokenLiveData.value = it
+            }
+        }
     }
 
     class Factory(private val authService: IAuthService) : ViewModelProvider.Factory {

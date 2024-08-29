@@ -55,6 +55,10 @@ dependencies {
     // Rakuten Reward SDK
     implementation(libs.rewardsdknative.ui)
 
+    // User SDK
+    implementation(libs.user)
+    implementation(libs.volley)
+
     //====== Jetpack Navigation ============
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)

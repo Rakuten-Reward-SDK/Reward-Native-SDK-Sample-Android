@@ -11,4 +11,6 @@ interface IAuthService {
     suspend fun login()
 
     suspend fun logout()
+
+    fun isLoggedIn(): Boolean
 }

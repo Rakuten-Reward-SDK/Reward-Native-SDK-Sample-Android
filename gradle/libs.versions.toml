@@ -13,6 +13,8 @@ activity = "1.9.1"
 constraintlayout = "2.1.4"
 jetpackNavigation = "2.7.7"
 rewardsdknativeUi = "5.4.1"
+user = "5.2.0"
+volley = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +31,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 rewardsdknative-ui = { group = "com.rakuten.android", name = "rewardsdknative-ui", version.ref = "rewardsdknativeUi" }
+user = { group = "jp.co.rakuten.sdtd", name = "user", version.ref = "user" }
+volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

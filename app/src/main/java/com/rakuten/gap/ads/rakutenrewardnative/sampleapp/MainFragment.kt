@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.rakuten.gap.ads.mission_core.RakutenReward
 import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
 
 /**
  *
@@ -23,9 +24,19 @@ class MainFragment : ListFragment() {
     private lateinit var binding: FragmentMainBinding
 
     private val features = listOf(
-        FeatureItem("Login") { navigate(MainFragmentDirections.goToLoginFragment()) },
+        FeatureItem("Login (User SDK)") { userSdkLogin() },
         FeatureItem("SDK Portal") { RakutenReward.openSDKPortal() }
     )
+
+    private fun userSdkLogin() {
+        // check android os version less than android 14
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            navigate(MainFragmentDirections.goToLoginFragment())
+        } else {
+            requireContext().openDialog("User SDK Login is no longer supported for Android 14 and above")
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
