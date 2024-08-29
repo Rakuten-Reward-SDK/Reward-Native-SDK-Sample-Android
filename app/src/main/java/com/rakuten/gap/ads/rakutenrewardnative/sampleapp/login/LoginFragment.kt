@@ -6,10 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.rakuten.gap.ads.mission_core.RakutenAuth
 import com.rakuten.gap.ads.mission_core.api.status.RakutenRewardAPIError
 import com.rakuten.gap.ads.mission_core.listeners.LoginResultCallback
+import com.rakuten.gap.ads.mission_core.listeners.LogoutResultCallback
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.internal.SdkAuthService
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentLoginBinding
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
 
@@ -24,7 +27,37 @@ class LoginFragment : Fragment() {
         const val REQUEST_CODE = 1012
     }
 
+    private val viewModel: LoginViewModel by viewModels<LoginViewModel> {
+        LoginViewModel.Factory(authService)
+    }
+
     private lateinit var binding: FragmentLoginBinding
+
+    private val authService = SdkAuthService.build {
+        setFragment(this@LoginFragment)
+        setRequestCode(REQUEST_CODE)
+        setLoginCallback(object : LoginResultCallback {
+            override fun loginFailed(e: RakutenRewardAPIError) {
+                requireContext().openDialog("Login failed: $e")
+            }
+
+            override fun loginSuccess() {
+                checkLoginStatus()
+                findNavController().navigateUp()
+            }
+
+        })
+        setLogoutCallback(object : LogoutResultCallback {
+            override fun logoutFailed(e: RakutenRewardAPIError) {
+                requireContext().openDialog("Logout failed: $e")
+            }
+
+            override fun logoutSuccess() {
+                checkLoginStatus()
+            }
+
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,30 +78,19 @@ class LoginFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE) {
-            RakutenAuth.handleActivityResult(data, object : LoginResultCallback {
-                override fun loginFailed(e: RakutenRewardAPIError) {
-                    requireContext().openDialog("Login failed: $e")
-                }
-
-                override fun loginSuccess() {
-                    checkLoginStatus()
-                    findNavController().navigateUp()
-                }
-
-            })
+            viewModel.handleActivityResult(data)
         }
     }
 
     private fun setListener() {
         with(binding) {
             loginButton.setOnClickListener {
-                login()
+                viewModel.login()
+            }
+            logoutButton.setOnClickListener {
+                viewModel.logout()
             }
         }
-    }
-
-    private fun login() {
-        RakutenAuth.openLoginPage(this, REQUEST_CODE)
     }
 
     private fun checkLoginStatus() {
