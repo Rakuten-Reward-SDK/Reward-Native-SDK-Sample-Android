@@ -26,7 +26,7 @@
         <!-- Reward SDK Application Key -->
         <meta-data
             android:name="com.rakuten.gap.ads.mission_core.appKey"
-            android:value="anAuY28ucmFrdXRlbi5yZXdhcmQuc2FtcGxlLmFuZHJvaWQteGlSRGlWQVd5Q0JjS0IxUlBEM1F5aG5ObXZvZ0NoVmc=" />
+            android:value="${appKey}" />
     </application>
 
 </manifest>

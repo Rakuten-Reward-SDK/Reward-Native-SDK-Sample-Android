@@ -41,7 +41,7 @@ class MainActivity : RakutenRewardBaseActivity() {
     }
 
     companion object {
-        private const val DAILY_MISSION = "8ksugNUt6P23eX7P"
+        private const val DAILY_MISSION = BuildConfig.dailyMissionCode
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
