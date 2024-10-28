@@ -1,5 +1,7 @@
 package com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.rae
 
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.BuildConfig
+
 /**
  *
  * @author zack.keng
@@ -8,11 +10,10 @@ package com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.rae
  */
 object AuthConst {
 
-    const val AUTH_NAME: String = "rakuten-reward-app"
-    const val CLIENT: String = "rakuten_reward_app"
-    const val DOMAIN: String = "https://app.rakuten.co.jp"
-    const val SCOPE: String =
-        "memberinfo_read_name,90days@Refresh,memberinfo_read_basic,30days@Access,mission-sdk"
-    const val SECRET: String = "ElRMQzlsqq5EISq9BWRli4hZmWHAoOAnt4xSQPdQEUYI"
+    const val AUTH_NAME: String = BuildConfig.userSdkAuthName
+    const val CLIENT: String = BuildConfig.userSdkClient
+    const val DOMAIN: String = BuildConfig.userSdkDomain
+    const val SCOPE: String = BuildConfig.userSdkScopes
+    const val SECRET: String = BuildConfig.userSdkSecret
 
 }
