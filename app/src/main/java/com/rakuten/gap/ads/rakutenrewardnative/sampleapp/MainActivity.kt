@@ -24,7 +24,7 @@ class MainActivity : RakutenRewardBaseActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     companion object {
-        private const val DAILY_MISSION = "8ksugNUt6P23eX7P"
+        private const val DAILY_MISSION = BuildConfig.dailyMissionCode
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
