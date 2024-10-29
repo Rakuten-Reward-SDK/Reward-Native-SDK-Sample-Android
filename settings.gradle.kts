@@ -17,6 +17,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven(url = "https://raw.github.com/rakuten-ads/Rakuten-Reward-Native-Android/master/maven")
+        maven(url = "https://artifactory.rakuten-it.com/membership-mvn-release/")
     }
 }
 

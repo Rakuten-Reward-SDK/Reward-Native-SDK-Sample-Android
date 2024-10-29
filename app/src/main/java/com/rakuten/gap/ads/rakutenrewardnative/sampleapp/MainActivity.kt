@@ -1,7 +1,9 @@
 package com.rakuten.gap.ads.rakutenrewardnative.sampleapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -16,8 +18,12 @@ import com.rakuten.gap.ads.mission_core.Success
 import com.rakuten.gap.ads.mission_core.activity.RakutenRewardBaseActivity
 import com.rakuten.gap.ads.mission_core.api.status.RakutenRewardAPIError
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.idsdk.IdSdkAuth
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.login.LoginViewModel
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.observeOnce
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
 import kotlinx.coroutines.launch
+import r10.one.auth.pendingSession
 
 class MainActivity : RakutenRewardBaseActivity() {
 
@@ -25,6 +31,15 @@ class MainActivity : RakutenRewardBaseActivity() {
 
     companion object {
         private const val DAILY_MISSION = BuildConfig.dailyMissionCode
+    }
+
+    private val idSdkAuth: IdSdkAuth by lazy {
+        IdSdkAuth.initClient(this)
+        IdSdkAuth.getInstance()
+    }
+
+    private val loginViewModel: LoginViewModel by viewModels<LoginViewModel> {
+        LoginViewModel.Factory(idSdkAuth)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +54,36 @@ class MainActivity : RakutenRewardBaseActivity() {
         val navController = host.navController
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setUpActionBar(navController)
+        setObserver()
+        checkLoginStatus()
+    }
+
+    private fun checkLoginStatus() {
+        loginViewModel.isLoggedInLiveData.observeOnce(this) {
+            if (it) loginViewModel.getExchangeToken()
+        }
+        loginViewModel.isLoggedIn()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        intent.pendingSession?.let { loginViewModel.authenticate(it) }
+    }
+
+    private fun setObserver() {
+        loginViewModel.tokenLiveData.observe(this) {
+            RakutenReward.setRIdToken(it)
+            RakutenReward.startSession()
+        }
+        loginViewModel.exchangeTokenLiveData.observe(this) {
+            loginViewModel.getAccessToken(this, it)
+        }
+        loginViewModel.rzCookieLiveData.observe(this) {
+            RakutenReward.setRz(it)
+        }
+        loginViewModel.easyIdLiveData.observe(this) {
+            Log.d("MainActivity", "EasyId: $it")
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -51,13 +96,22 @@ class MainActivity : RakutenRewardBaseActivity() {
 
     override fun onSDKStatusChanged(status: RakutenRewardSDKStatus) {
         when (status) {
-            RakutenRewardSDKStatus.ONLINE -> logDailyAction()
+            RakutenRewardSDKStatus.ONLINE -> {
+                popToMain()
+                logDailyAction()
+            }
+
             RakutenRewardSDKStatus.OFFLINE -> openDialog("Reward SDK is offline")
             RakutenRewardSDKStatus.APPCODEINVALID -> openDialog("Application Key is invalid")
             RakutenRewardSDKStatus.TOKENEXPIRED -> openDialog("Token is expired")
             RakutenRewardSDKStatus.USER_NOT_CONSENT -> requestConsent()
         }
 
+    }
+
+    private fun popToMain() {
+        val navController = findNavController(R.id.nav_host_fragment)
+        navController.popBackStack(R.id.mainFragment, false)
     }
 
     private fun requestConsent() {

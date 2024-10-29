@@ -1,7 +1,11 @@
 package com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util
 
 import android.content.Context
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.R
 
 /**
@@ -17,4 +21,13 @@ fun Context.openDialog(message: String): AlertDialog {
         .setMessage(message)
         .setCancelable(true)
         .show()
+}
+
+fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+    observe(lifecycleOwner, object : Observer<T> {
+        override fun onChanged(value: T) {
+            observer.onChanged(value)
+            removeObserver(this)
+        }
+    })
 }

@@ -1,5 +1,8 @@
 package com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth
 
+import r10.one.auth.PendingSession
+import r10.one.auth.Token
+
 /**
  *
  * @author zack.keng
@@ -11,4 +14,10 @@ interface IAuthService {
     suspend fun login()
 
     suspend fun logout()
+
+    suspend fun isLoggedIn(): Boolean
+
+    suspend fun getSession(pendingSession: PendingSession, callback: () -> Unit)
+
+    suspend fun getExchangeToken(audience: String, scope: Set<String>): Triple<Token?, String?, String?>
 }
