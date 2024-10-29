@@ -1,6 +1,7 @@
 package com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util
 
 import android.content.Context
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.R
 
@@ -17,4 +18,8 @@ fun Context.openDialog(message: String): AlertDialog {
         .setMessage(message)
         .setCancelable(true)
         .show()
+}
+
+fun Context.showToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }

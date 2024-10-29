@@ -17,6 +17,7 @@ import com.rakuten.gap.ads.mission_core.activity.RakutenRewardBaseActivity
 import com.rakuten.gap.ads.mission_core.api.status.RakutenRewardAPIError
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.showToast
 import kotlinx.coroutines.launch
 
 class MainActivity : RakutenRewardBaseActivity() {
@@ -51,7 +52,10 @@ class MainActivity : RakutenRewardBaseActivity() {
 
     override fun onSDKStatusChanged(status: RakutenRewardSDKStatus) {
         when (status) {
-            RakutenRewardSDKStatus.ONLINE -> logDailyAction()
+            RakutenRewardSDKStatus.ONLINE -> {
+                showToast("Reward SDK is online")
+                logDailyAction()
+            }
             RakutenRewardSDKStatus.OFFLINE -> openDialog("Reward SDK is offline")
             RakutenRewardSDKStatus.APPCODEINVALID -> openDialog("Application Key is invalid")
             RakutenRewardSDKStatus.TOKENEXPIRED -> openDialog("Token is expired")
