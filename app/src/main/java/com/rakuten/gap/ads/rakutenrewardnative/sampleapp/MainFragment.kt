@@ -10,8 +10,10 @@ import androidx.fragment.app.ListFragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.rakuten.gap.ads.mission_core.RakutenReward
+import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.showToast
 
 /**
  *
@@ -24,7 +26,8 @@ class MainFragment : ListFragment() {
 
     private val features = listOf(
         FeatureItem("Login") { navigate(MainFragmentDirections.goToLoginFragment()) },
-        FeatureItem("SDK Portal") { RakutenReward.openSDKPortal() }
+        FeatureItem("SDK Portal") { checkSdkStatus { RakutenReward.openSDKPortal() } },
+        FeatureItem("Missions") { checkSdkStatus { navigate(MainFragmentDirections.goToMissionsFragment()) } },
     )
 
     override fun onCreateView(
@@ -50,6 +53,14 @@ class MainFragment : ListFragment() {
 
     private fun navigate(directions: NavDirections) {
         findNavController().navigate(directions)
+    }
+
+    private inline fun checkSdkStatus(callback: () -> Unit) {
+        if (RakutenReward.status == RakutenRewardSDKStatus.ONLINE) {
+            callback()
+        } else {
+            requireContext().showToast("Please login first")
+        }
     }
 }
 

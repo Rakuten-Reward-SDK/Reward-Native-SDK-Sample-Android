@@ -14,6 +14,10 @@
         <action
             android:id="@+id/go_to_loginFragment"
             app:destination="@id/loginFragment" />
+
+        <action
+            android:id="@+id/go_to_missionsFragment"
+            app:destination="@id/missionsFragment" />
     </fragment>
 
     <fragment
@@ -22,4 +26,8 @@
         android:label="@string/label_login"
         tools:layout="@layout/fragment_login" />
 
+    <fragment
+        android:id="@+id/missionsFragment"
+        android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.mission.MissionsFragment"
+        android:label="@string/label_missions" />
 </navigation>
