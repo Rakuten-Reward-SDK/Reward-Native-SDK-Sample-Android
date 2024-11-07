@@ -9,10 +9,13 @@ import android.widget.ListView
 import androidx.fragment.app.ListFragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.rakuten.gap.ads.mission_core.Failed
 import com.rakuten.gap.ads.mission_core.RakutenReward
+import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.showToast
 
 /**
  *
@@ -24,9 +27,25 @@ class MainFragment : ListFragment() {
     private lateinit var binding: FragmentMainBinding
 
     private val features = listOf(
-        FeatureItem("Login (User SDK)") { userSdkLogin() },
-        FeatureItem("SDK Portal") { RakutenReward.openSDKPortal() }
+        FeatureItem("Login") { navigate(MainFragmentDirections.goToLoginFragment()) },
+        FeatureItem("SDK Portal") { checkSdkStatus { launchSDKPortal() } },
+        FeatureItem("Missions") { checkSdkStatus { navigate(MainFragmentDirections.goToMissionsFragment()) } },
     )
+
+    private fun launchSDKPortal() {
+        RakutenReward.openSDKPortal(
+            isPortalOpenedCallback = {
+                // this callback is to check whether the portal is opened or not
+                if (it is Failed) {
+                    requireContext().showToast("Failed to open SDK Portal [${it.error}]")
+                }
+            },
+            activityResultCallback = {
+                // if you have a mission which require user to open the Reward SDK portal,
+                // we recommend to log action after user close the portal
+            }
+        )
+    }
 
     private fun userSdkLogin() {
         // check android os version less than android 14
@@ -35,7 +54,6 @@ class MainFragment : ListFragment() {
         } else {
             requireContext().openDialog("User SDK Login is no longer supported for Android 14 and above")
         }
-
     }
 
     override fun onCreateView(
@@ -61,6 +79,14 @@ class MainFragment : ListFragment() {
 
     private fun navigate(directions: NavDirections) {
         findNavController().navigate(directions)
+    }
+
+    private inline fun checkSdkStatus(callback: () -> Unit) {
+        if (RakutenReward.status == RakutenRewardSDKStatus.ONLINE) {
+            callback()
+        } else {
+            requireContext().showToast("Please login first")
+        }
     }
 }
 
