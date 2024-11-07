@@ -4,4 +4,6 @@
     <string name="log_out">Log Out</string>
 
     <string name="label_login">Third Party Login</string>
+    <string name="label_missions">Missions</string>
+    <string name="label_mission_details">Mission Details</string>
 </resources>

@@ -9,9 +9,12 @@ import android.widget.ListView
 import androidx.fragment.app.ListFragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.rakuten.gap.ads.mission_core.Failed
 import com.rakuten.gap.ads.mission_core.RakutenReward
+import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.showToast
 
 /**
  *
@@ -24,8 +27,24 @@ class MainFragment : ListFragment() {
 
     private val features = listOf(
         FeatureItem("Login") { navigate(MainFragmentDirections.goToLoginFragment()) },
-        FeatureItem("SDK Portal") { RakutenReward.openSDKPortal() }
+        FeatureItem("SDK Portal") { checkSdkStatus { launchSDKPortal() } },
+        FeatureItem("Missions") { checkSdkStatus { navigate(MainFragmentDirections.goToMissionsFragment()) } },
     )
+
+    private fun launchSDKPortal() {
+        RakutenReward.openSDKPortal(
+            isPortalOpenedCallback = {
+                // this callback is to check whether the portal is opened or not
+                if (it is Failed) {
+                    requireContext().showToast("Failed to open SDK Portal [${it.error}]")
+                }
+            },
+            activityResultCallback = {
+                // if you have a mission which require user to open the Reward SDK portal,
+                // we recommend to log action after user close the portal
+            }
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +69,14 @@ class MainFragment : ListFragment() {
 
     private fun navigate(directions: NavDirections) {
         findNavController().navigate(directions)
+    }
+
+    private inline fun checkSdkStatus(callback: () -> Unit) {
+        if (RakutenReward.status == RakutenRewardSDKStatus.ONLINE) {
+            callback()
+        } else {
+            requireContext().showToast("Please login first")
+        }
     }
 }
 
