@@ -74,7 +74,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
-    implementation("io.coil-kt.coil3:coil-compose:3.0.0-rc02")
+    implementation("io.coil-kt.coil3:coil-compose:3.0.0")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

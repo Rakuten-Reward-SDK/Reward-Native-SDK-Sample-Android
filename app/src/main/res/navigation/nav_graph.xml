@@ -29,5 +29,14 @@
     <fragment
         android:id="@+id/missionsFragment"
         android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.mission.MissionsFragment"
-        android:label="@string/label_missions" />
+        android:label="@string/label_missions" >
+        <action
+            android:id="@+id/go_to_missionDetailsFragment"
+            app:destination="@id/missionDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/missionDetailsFragment"
+        android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.mission.MissionDetailsFragment"
+        android:label="@string/label_mission_details" />
 </navigation>

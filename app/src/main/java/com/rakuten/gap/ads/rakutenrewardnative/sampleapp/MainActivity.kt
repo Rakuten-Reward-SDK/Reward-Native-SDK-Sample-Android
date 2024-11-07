@@ -46,6 +46,10 @@ class MainActivity : RakutenRewardBaseActivity() {
         return findNavController(R.id.nav_host_fragment).navigateUp(appBarConfiguration)
     }
 
+    fun goBack() {
+        findNavController(R.id.nav_host_fragment).popBackStack()
+    }
+
     private fun setUpActionBar(navController: NavController) {
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
