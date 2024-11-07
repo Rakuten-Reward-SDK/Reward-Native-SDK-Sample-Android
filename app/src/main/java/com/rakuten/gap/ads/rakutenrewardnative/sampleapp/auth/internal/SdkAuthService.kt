@@ -8,10 +8,9 @@ import com.rakuten.gap.ads.mission_core.listeners.LogoutResultCallback
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.IAuthService
 
 /**
+ * This class demo on how to use Third party Login and Logout API
  *
- * @author zack.keng
- * Created on 2024/08/29
- * Copyright © 2024 Rakuten Asia. All rights reserved.
+ * API to demo: [RakutenAuth.openLoginPage], [RakutenAuth.logout]
  */
 class SdkAuthService private constructor(
     private val requestCode: Int,

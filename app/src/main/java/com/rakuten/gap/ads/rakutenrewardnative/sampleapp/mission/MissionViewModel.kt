@@ -13,10 +13,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 /**
+ * This class demo about Mission API
  *
- * @author zack.keng
- * Created on 2024/10/29
- * Copyright © 2024 Rakuten Asia. All rights reserved.
+ * API to demo [RakutenRewardCoroutine.getMissionsLite], [RakutenRewardCoroutine.getMissionDetails], [RakutenRewardCoroutine.logAction]
  */
 class MissionViewModel: ViewModel() {
     private val _missions = MutableStateFlow<List<MissionLiteData>>(emptyList())
