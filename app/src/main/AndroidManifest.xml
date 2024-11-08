@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:name=".App"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -22,6 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option2StartSessionActivity" />
+        <activity android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option3StartSessionActivity" />
 
         <!-- Reward SDK Application Key -->
         <meta-data
