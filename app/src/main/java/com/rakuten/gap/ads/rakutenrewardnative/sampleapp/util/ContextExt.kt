@@ -1,6 +1,7 @@
 package com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util
 
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LifecycleOwner
@@ -34,4 +35,8 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 
 fun Context.showToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
+fun Context.justStart(clazz: Class<*>) {
+    startActivity(Intent(this, clazz))
 }

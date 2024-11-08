@@ -6,4 +6,10 @@
     <string name="label_login">Third Party Login</string>
     <string name="label_missions">Missions</string>
     <string name="label_mission_details">Mission Details</string>
+
+    <string name="title_option2">Start Session Option 2</string>
+    <string name="title_option3">Start Session Option 3</string>
+    <string name="auth_api_signed_in">Has User Signed In</string>
+    <string name="auth_api_username">User\'s Name</string>
+    <string name="auth_api_user_info">User\'s Info</string>
 </resources>

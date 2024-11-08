@@ -20,11 +20,13 @@ import com.rakuten.gap.ads.mission_core.activity.RakutenRewardBaseActivity
 import com.rakuten.gap.ads.mission_core.api.status.RakutenRewardAPIError
 import com.rakuten.gap.ads.mission_core.listeners.RakutenRewardListener
 import com.rakuten.gap.ads.mission_core.observers.RakutenRewardManager
+import com.rakuten.gap.ads.mission_core.status.RakutenRewardConsentStatus
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.idsdk.IdSdkAuth
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.login.LoginViewModel
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.observeOnce
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.showToast
 import kotlinx.coroutines.launch
 import r10.one.auth.pendingSession
 
@@ -134,15 +136,34 @@ class MainActivity : RakutenRewardBaseActivity() {
 
     }
 
-    private fun popToMain() {
-        val navController = findNavController(R.id.nav_host_fragment)
-        navController.popBackStack(R.id.mainFragment, false)
+    override fun onSDKConsentPresented() {
+        Log.d("MainActivity", "Request Consent presented")
+    }
+
+    override fun onSDKConsentClosed() {
+        super.onSDKConsentClosed()
+        Log.d("MainActivity", "Request Consent closed")
     }
 
     private fun requestConsent() {
         lifecycleScope.launch {
-            RakutenReward.requestForConsent()
+            // once user provided consent, SDK status will be changed to ONLINE
+            RakutenReward.requestForConsent { consentStatus ->
+                when (consentStatus) {
+                    RakutenRewardConsentStatus.CONSENT_PROVIDED -> showToast("User provided consent")
+                    RakutenRewardConsentStatus.CONSENT_NOT_PROVIDED -> showToast("User did not provide consent")
+                    RakutenRewardConsentStatus.CONSENT_FAILED -> showToast("User provided consent but failed to sync to server")
+                    RakutenRewardConsentStatus.CONSENT_PROVIDED_RESTART_SESSION_FAILED -> showToast(
+                        "User provided consent but failed to restart session"
+                    )
+                }
+            }
         }
+    }
+
+    private fun popToMain() {
+        val navController = findNavController(R.id.nav_host_fragment)
+        navController.popBackStack(R.id.mainFragment, false)
     }
 
     private fun logDailyAction() {
