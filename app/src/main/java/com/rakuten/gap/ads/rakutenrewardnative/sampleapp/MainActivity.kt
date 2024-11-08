@@ -85,13 +85,16 @@ class MainActivity : RakutenRewardBaseActivity() {
 
     private fun setObserver() {
         loginViewModel.tokenLiveData.observe(this) {
+            // after getting the access token use the following API to set the token
             RakutenReward.setRIdToken(it)
+            // start session after setting the token
             RakutenReward.startSession()
         }
         loginViewModel.exchangeTokenLiveData.observe(this) {
             loginViewModel.getAccessToken(this, it)
         }
         loginViewModel.rzCookieLiveData.observe(this) {
+            // use the following API to set the rz cookie
             RakutenReward.setRz(it)
         }
         loginViewModel.easyIdLiveData.observe(this) {
