@@ -70,7 +70,7 @@ class LoginViewModel(private val authService: IAuthService) : ViewModel() {
      */
     suspend fun getSpsExchangeToken(): String? {
         val spsScopes = IdSdkConst.SCOPES_SPS.split(",").toSet()
-        val (exchangeToken, _, _) = authService.getExchangeToken(
+        val (exchangeToken, _) = authService.getExchangeToken(
             IdSdkConst.AUDIENCE_SPS,
             spsScopes
         )

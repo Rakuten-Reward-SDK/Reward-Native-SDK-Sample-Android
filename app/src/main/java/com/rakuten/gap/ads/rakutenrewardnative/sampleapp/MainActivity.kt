@@ -77,6 +77,10 @@ class MainActivity : RakutenRewardBaseActivity() {
         initSps()
     }
 
+    /**
+     * to use SPSaas SDK, you need to initialize it first by providing the platform name
+     * and the exchange token using SPS audience and SPS scopes
+     */
     private fun initSps() {
         RakutenMissionSps.init(SPS_PLATFORM) {
             val exchangeToken = loginViewModel.getSpsExchangeToken()

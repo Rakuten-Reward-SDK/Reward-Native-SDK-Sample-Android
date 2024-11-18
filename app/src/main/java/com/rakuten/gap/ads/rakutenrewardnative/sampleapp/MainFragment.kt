@@ -13,6 +13,7 @@ import com.rakuten.gap.ads.mission_core.Failed
 import com.rakuten.gap.ads.mission_core.RakutenReward
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.mission_sps.api.openSpsPortal
+import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.showAuthApiDialog
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option2StartSessionActivity
@@ -48,6 +49,10 @@ class MainFragment : ListFragment() {
         )
     }
 
+    /**
+     * use [RakutenReward.openSpsPortal] API to open the SPS portal
+     * NOT [RakutenReward.openSDKPortal] API
+     */
     private fun launchSpsPortal() {
         RakutenReward.openSpsPortal(
             isPortalOpenedCallback = {
