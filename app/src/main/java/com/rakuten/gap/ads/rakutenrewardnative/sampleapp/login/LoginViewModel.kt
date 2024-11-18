@@ -35,10 +35,6 @@ class LoginViewModel(private val authService: IAuthService) : ViewModel() {
     val rzCookieLiveData: LiveData<String>
         get() = _rzCookieLiveData
 
-    private val _easyIdLiveData = MutableLiveData<String>()
-    val easyIdLiveData: LiveData<String>
-        get() = _easyIdLiveData
-
     private val _isLoggedInLiveData = MutableLiveData<Boolean>()
     val isLoggedInLiveData: LiveData<Boolean>
         get() = _isLoggedInLiveData
@@ -83,28 +79,28 @@ class LoginViewModel(private val authService: IAuthService) : ViewModel() {
 
     fun getExchangeToken() {
         viewModelScope.launch {
-            val (exchangeToken, rzCookie, easyId) = authService.getExchangeToken(
+            val (exchangeToken, rzCookie) = authService.getExchangeToken(
                 IdSdkConst.AUDIENCE_MISSION,
                 setOf(IdSdkConst.SCOPES_MISSION)
             )
             rzCookie?.let { _rzCookieLiveData.postValue(it) }
-            easyId?.let { _easyIdLiveData.postValue(it) }
             exchangeToken?.let { _exchangeTokenLiveData.postValue(it.value) }
         }
     }
 
     fun getAccessToken(context: Context, exchangeToken: String) {
-        val request: JsonObjectRequest = object : JsonObjectRequest(Method.GET, IdSdkConst.TOKEN_API, null, Response.Listener {
-            _tokenLiveData.postValue(it.getString("access_token"))
-        }, Response.ErrorListener {
-            Log.d("LoginViewModel", "getAccessToken error: $it")
-        }) {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = exchangeToken
-                return headers
+        val request: JsonObjectRequest =
+            object : JsonObjectRequest(Method.GET, IdSdkConst.TOKEN_API, null, Response.Listener {
+                _tokenLiveData.postValue(it.getString("access_token"))
+            }, Response.ErrorListener {
+                Log.d("LoginViewModel", "getAccessToken error: $it")
+            }) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = exchangeToken
+                    return headers
+                }
             }
-        }
 
         // Volley request policy, only one time request to avoid duplicate transaction
         request.retryPolicy = DefaultRetryPolicy(

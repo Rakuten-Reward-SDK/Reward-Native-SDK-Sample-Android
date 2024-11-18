@@ -110,9 +110,6 @@ class MainActivity : RakutenRewardBaseActivity() {
             // use the following API to set the rz cookie
             RakutenReward.setRz(it)
         }
-        loginViewModel.easyIdLiveData.observe(this) {
-            Log.d("MainActivity", "EasyId: $it")
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -174,7 +171,12 @@ class MainActivity : RakutenRewardBaseActivity() {
 
     private fun popToMain() {
         val navController = findNavController(R.id.nav_host_fragment)
-        navController.popBackStack(R.id.mainFragment, false)
+        navController.currentDestination?.let {
+            if (it.id == R.id.loginFragment) {
+                navController.popBackStack(R.id.mainFragment, false)
+            }
+        }
+
     }
 
     private fun logDailyAction() {

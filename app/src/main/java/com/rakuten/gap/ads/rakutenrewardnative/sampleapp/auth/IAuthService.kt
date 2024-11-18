@@ -19,5 +19,5 @@ interface IAuthService {
 
     suspend fun getSession(pendingSession: PendingSession, callback: () -> Unit)
 
-    suspend fun getExchangeToken(audience: String, scope: Set<String>): Triple<Token?, String?, String?>
+    suspend fun getExchangeToken(audience: String, scope: Set<String>): Pair<Token?, String?>
 }
