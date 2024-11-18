@@ -3,7 +3,7 @@
     <string name="log_in">Log In</string>
     <string name="log_out">Log Out</string>
 
-    <string name="label_login">Third Party Login</string>
+    <string name="label_login">ID SDK Login</string>
     <string name="label_missions">Missions</string>
     <string name="label_mission_details">Mission Details</string>
 

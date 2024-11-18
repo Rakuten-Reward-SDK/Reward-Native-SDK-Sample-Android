@@ -16,7 +16,6 @@ import r10.one.auth.Token
 import r10.one.auth.artifacts
 import r10.one.auth.defaultClient
 import r10.one.auth.exchangeToken
-import r10.one.auth.idtoken.StandardClaim
 import r10.one.auth.rzCookie
 import r10.one.auth.sessionRequest
 import java.lang.ref.WeakReference
@@ -106,12 +105,12 @@ class IdSdkAuth private constructor(activity: FragmentActivity) : IAuthService {
     /**
      * Get exchange token.
      *
-     * @return Triple<Token?, String?, String?> - exchange token, rz cookie, easy id
+     * @return Pair<Token?, String?> - exchange token, rz cookie
      */
     override suspend fun getExchangeToken(
         audience: String,
         scope: Set<String>
-    ): Triple<Token?, String?, String?> {
+    ): Pair<Token?, String?> {
         try {
             val artifactResponse = session?.artifacts {
                 +exchangeToken {
@@ -123,10 +122,9 @@ class IdSdkAuth private constructor(activity: FragmentActivity) : IAuthService {
 
             val exchangeToken = artifactResponse?.exchangeToken(audience)
             val rzCookie = artifactResponse?.rzCookie
-            val easyId: String? = session?.idToken?.get(StandardClaim.SUBJECT)
-            return Triple(exchangeToken, rzCookie, easyId)
+            return Pair(exchangeToken, rzCookie)
         } catch (e: Exception) {
-            return Triple(null, null, null)
+            return Pair(null, null)
         }
     }
 }
