@@ -22,11 +22,13 @@ import com.rakuten.gap.ads.mission_core.listeners.RakutenRewardListener
 import com.rakuten.gap.ads.mission_core.observers.RakutenRewardManager
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardConsentStatus
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
+import com.rakuten.gap.ads.mission_sps.api.RakutenMissionSps
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.idsdk.IdSdkAuth
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.login.LoginViewModel
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.observeOnce
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.showToast
+import jp.co.rakuten.sps.web.model.auth.SpsCompatToken
 import kotlinx.coroutines.launch
 import r10.one.auth.pendingSession
 
@@ -46,6 +48,7 @@ class MainActivity : RakutenRewardBaseActivity() {
 
     companion object {
         private const val DAILY_MISSION = BuildConfig.dailyMissionCode
+        private const val SPS_PLATFORM = BuildConfig.spsPlatform
     }
 
     private val idSdkAuth: IdSdkAuth by lazy {
@@ -71,6 +74,14 @@ class MainActivity : RakutenRewardBaseActivity() {
         setUpActionBar(navController)
         setObserver()
         checkLoginStatus()
+        initSps()
+    }
+
+    private fun initSps() {
+        RakutenMissionSps.init(SPS_PLATFORM) {
+            val exchangeToken = loginViewModel.getSpsExchangeToken()
+            exchangeToken?.let { SpsCompatToken.CatExchange(it) }
+        }
     }
 
     private fun checkLoginStatus() {

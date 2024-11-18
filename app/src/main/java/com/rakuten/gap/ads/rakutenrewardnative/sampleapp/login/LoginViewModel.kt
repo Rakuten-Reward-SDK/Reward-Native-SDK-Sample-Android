@@ -69,6 +69,18 @@ class LoginViewModel(private val authService: IAuthService) : ViewModel() {
         }
     }
 
+    /**
+     * Return exchange token using SPS audience and SPS scopes
+     */
+    suspend fun getSpsExchangeToken(): String? {
+        val spsScopes = IdSdkConst.SCOPES_SPS.split(",").toSet()
+        val (exchangeToken, _, _) = authService.getExchangeToken(
+            IdSdkConst.AUDIENCE_SPS,
+            spsScopes
+        )
+        return exchangeToken?.value
+    }
+
     fun getExchangeToken() {
         viewModelScope.launch {
             val (exchangeToken, rzCookie, easyId) = authService.getExchangeToken(

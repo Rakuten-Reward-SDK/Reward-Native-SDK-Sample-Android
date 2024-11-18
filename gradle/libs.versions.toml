@@ -43,6 +43,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 rewardsdknative-bom = { group = "com.rakuten.android", name = "rewardsdknative-bom", version.ref = "rewardsdknativeBom" }
 rewardsdknative-core = { group = "com.rakuten.android", name = "rewardsdknative-core" }
+rewardsdknative-sps = { group = "com.rakuten.android", name = "rewardsdknative-sps" }
 rewardsdknative-ui = { group = "com.rakuten.android", name = "rewardsdknative-ui" }
 secrets-gradle-plugin = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name = "secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 idsdk-core = { group = "r10.one.auth", name = "core", version.ref = "idsdk" }

@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.rakuten.gap.ads.mission_core.Failed
 import com.rakuten.gap.ads.mission_core.RakutenReward
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
-import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
+import com.rakuten.gap.ads.mission_sps.api.openSpsPortal
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.showAuthApiDialog
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option2StartSessionActivity
@@ -32,7 +32,7 @@ class MainFragment : ListFragment() {
     private val features: List<FeatureItem> by lazy {
         listOf(
             FeatureItem("Login") { navigate(MainFragmentDirections.goToLoginFragment()) },
-            FeatureItem("SDK Portal") { checkSdkStatus { launchSDKPortal() } },
+            FeatureItem("SPS Portal") { checkSdkStatus { launchSpsPortal() } },
             FeatureItem("Missions") { checkSdkStatus { navigate(MainFragmentDirections.goToMissionsFragment()) } },
             FeatureItem("RakutenAuth API") { requireContext().showAuthApiDialog() },
             FeatureItem(getString(R.string.title_option2)) {
@@ -48,12 +48,12 @@ class MainFragment : ListFragment() {
         )
     }
 
-    private fun launchSDKPortal() {
-        RakutenReward.openSDKPortal(
+    private fun launchSpsPortal() {
+        RakutenReward.openSpsPortal(
             isPortalOpenedCallback = {
                 // this callback is to check whether the portal is opened or not
                 if (it is Failed) {
-                    requireContext().showToast("Failed to open SDK Portal [${it.error}]")
+                    requireContext().showToast("Failed to open SPS Portal [${it.error}]")
                 }
             },
             activityResultCallback = {
