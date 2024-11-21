@@ -15,6 +15,7 @@ import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.showAuthApiDialog
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.extension.JsExtensionActivity
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option2StartSessionActivity
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option3StartSessionActivity
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.justStart
@@ -43,6 +44,11 @@ class MainFragment : ListFragment() {
             FeatureItem(getString(R.string.title_option3)) {
                 checkSdkStatus {
                     requireContext().justStart(Option3StartSessionActivity::class.java)
+                }
+            },
+            FeatureItem("JavaScript Extension") {
+                checkSdkStatus {
+                    requireContext().justStart(JsExtensionActivity::class.java)
                 }
             }
         )
