@@ -13,7 +13,6 @@ import com.rakuten.gap.ads.mission_core.Failed
 import com.rakuten.gap.ads.mission_core.RakutenReward
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
-import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.showAuthApiDialog
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option2StartSessionActivity
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option3StartSessionActivity
@@ -35,7 +34,6 @@ class MainFragment : ListFragment() {
             FeatureItem("Login") { navigate(MainFragmentDirections.goToLoginFragment()) },
             FeatureItem("SDK Portal") { checkSdkStatus { launchSDKPortal() } },
             FeatureItem("Missions") { checkSdkStatus { navigate(MainFragmentDirections.goToMissionsFragment()) } },
-            FeatureItem("RakutenAuth API") { requireContext().showAuthApiDialog() },
             FeatureItem(getString(R.string.title_option2)) {
                 checkSdkStatus {
                     requireContext().justStart(Option2StartSessionActivity::class.java)
