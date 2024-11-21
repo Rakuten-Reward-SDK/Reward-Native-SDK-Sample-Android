@@ -11,6 +11,7 @@ import com.rakuten.gap.ads.mission_core.listeners.LogoutResultCallback
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.MainActivity
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.rae.UserSdkLogoutReceiver
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentLoginBinding
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.isAndroid14OrNewer
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
 
 /**
@@ -63,10 +64,18 @@ class LoginFragment : Fragment() {
     private fun setListener() {
         with(binding) {
             loginButton.setOnClickListener {
-                viewModel.login()
+                if (requireContext().isAndroid14OrNewer()) {
+                    requireContext().openDialog("User SDK is no longer supported for Android 14 and above")
+                } else {
+                    viewModel.login()
+                }
             }
             logoutButton.setOnClickListener {
-                viewModel.logout()
+                if (requireContext().isAndroid14OrNewer()) {
+                    requireContext().openDialog("User SDK is no longer supported for Android 14 and above")
+                } else {
+                    viewModel.logout()
+                }
             }
         }
     }

@@ -2,6 +2,7 @@ package com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.R
@@ -27,4 +28,8 @@ fun Context.showToast(message: String) {
 
 fun Context.justStart(clazz: Class<*>) {
     startActivity(Intent(this, clazz))
+}
+
+fun Context.isAndroid14OrNewer(): Boolean {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
 }
