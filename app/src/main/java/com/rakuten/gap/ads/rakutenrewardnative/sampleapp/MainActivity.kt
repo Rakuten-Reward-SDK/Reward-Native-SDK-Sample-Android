@@ -25,6 +25,7 @@ import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.mission_sps.api.RakutenMissionSps
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.idsdk.IdSdkAuth
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.login.LoginViewModel
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.sps.MissionSpsManager
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.observeOnce
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.showToast
@@ -60,6 +61,8 @@ class MainActivity : RakutenRewardBaseActivity() {
         LoginViewModel.Factory(idSdkAuth)
     }
 
+    lateinit var missionSpsManager: MissionSpsManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -75,6 +78,7 @@ class MainActivity : RakutenRewardBaseActivity() {
         setObserver()
         checkLoginStatus()
         initSps()
+        missionSpsManager = MissionSpsManager()
     }
 
     /**

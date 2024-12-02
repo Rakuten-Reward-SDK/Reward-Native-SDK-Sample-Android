@@ -43,7 +43,12 @@ class MainFragment : ListFragment() {
                 checkSdkStatus {
                     requireContext().justStart(Option3StartSessionActivity::class.java)
                 }
-            }
+            },
+            FeatureItem(getString(R.string.label_mission_sps_api)) {
+                checkSdkStatus {
+                    navigate(MainFragmentDirections.goToMissionSpsApiFragment())
+                }
+            },
         )
     }
 

@@ -6,10 +6,20 @@
     <string name="label_login">ID SDK Login</string>
     <string name="label_missions">Missions</string>
     <string name="label_mission_details">Mission Details</string>
+    <string name="label_mission_sps_api">Mission SPS API</string>
 
     <string name="title_option2">Start Session Option 2</string>
     <string name="title_option3">Start Session Option 3</string>
     <string name="auth_api_signed_in">Has User Signed In</string>
     <string name="auth_api_username">User\'s Name</string>
     <string name="auth_api_user_info">User\'s Info</string>
+
+    <string name="opt_out_mission_feature">Opt Out Mission Feature</string>
+    <string name="opt_out_on_label">Currently the Mission Feature is opted out. In SPS Portal you can\'t navigate to Mission Tab, unless there\'s remaining unclaimed points.</string>
+    <string name="opt_out_off_label">The Mission Feature is not opted out.</string>
+
+    <string name="app_theme">App Theme</string>
+    <string name="current_theme">Current Theme</string>
+    <string name="theme_panda">Panda</string>
+    <string name="theme_simple">Simple</string>
 </resources>

@@ -18,6 +18,10 @@
         <action
             android:id="@+id/go_to_missionsFragment"
             app:destination="@id/missionsFragment" />
+
+        <action
+            android:id="@+id/go_to_missionSpsApiFragment"
+            app:destination="@id/missionSpsApiFragment" />
     </fragment>
 
     <fragment
@@ -29,7 +33,7 @@
     <fragment
         android:id="@+id/missionsFragment"
         android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.mission.MissionsFragment"
-        android:label="@string/label_missions" >
+        android:label="@string/label_missions">
         <action
             android:id="@+id/go_to_missionDetailsFragment"
             app:destination="@id/missionDetailsFragment" />
@@ -39,4 +43,9 @@
         android:id="@+id/missionDetailsFragment"
         android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.mission.MissionDetailsFragment"
         android:label="@string/label_mission_details" />
+    <fragment
+        android:id="@+id/missionSpsApiFragment"
+        android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.sps.MissionSpsApiFragment"
+        android:label="@string/label_mission_sps_api"
+        tools:layout="@layout/fragment_sps_api" />
 </navigation>
