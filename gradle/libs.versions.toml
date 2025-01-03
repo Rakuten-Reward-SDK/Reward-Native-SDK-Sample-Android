@@ -16,7 +16,7 @@ constraintlayout = "2.1.4"
 jetpackNavigation = "2.7.7"
 user = "5.2.0"
 volley = "1.2.1"
-rewardsdknativeBom = "6.2.0"
+rewardsdknativeBom = "7.0.1"
 secretsGradlePlugin = "2.0.1"
 
 [libraries]
