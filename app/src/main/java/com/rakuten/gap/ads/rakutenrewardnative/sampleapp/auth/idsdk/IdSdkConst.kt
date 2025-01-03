@@ -13,5 +13,5 @@ object IdSdkConst {
     const val SERVICE_URL = BuildConfig.idSdkServiceUrl
     const val SCOPES_MISSION = BuildConfig.idSdkScopeMission
     const val AUDIENCE_MISSION = BuildConfig.idSdkAudienceMission
-    const val TOKEN_API = BuildConfig.accessTokenEndPoint
+    const val TOKEN_ENDPOINT = BuildConfig.accessTokenEndPoint
 }
