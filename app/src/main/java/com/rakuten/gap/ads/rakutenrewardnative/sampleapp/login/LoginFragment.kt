@@ -10,6 +10,7 @@ import com.rakuten.gap.ads.mission_core.RakutenAuth
 import com.rakuten.gap.ads.mission_core.api.status.RakutenRewardAPIError
 import com.rakuten.gap.ads.mission_core.listeners.LogoutResultCallback
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentLoginBinding
+import r10.one.auth.session.mediateAndResume
 
 /**
  *
@@ -41,7 +42,7 @@ class LoginFragment : Fragment() {
     private fun setListener() {
         with(binding) {
             loginButton.setOnClickListener {
-                viewModel.login()
+                viewModel.login(requireActivity().mediateAndResume)
             }
             logoutButton.setOnClickListener {
                 viewModel.logout()

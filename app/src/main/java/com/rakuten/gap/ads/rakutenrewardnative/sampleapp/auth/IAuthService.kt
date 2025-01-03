@@ -1,7 +1,9 @@
 package com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth
 
+import android.content.Intent
 import r10.one.auth.PendingSession
 import r10.one.auth.Token
+import r10.one.auth.session.SessionMediationOptions
 
 /**
  *
@@ -11,13 +13,17 @@ import r10.one.auth.Token
  */
 interface IAuthService {
 
-    suspend fun login()
+    suspend fun login(mediation: SessionMediationOptions)
 
     suspend fun logout()
 
     suspend fun isLoggedIn(): Boolean
 
-    suspend fun getSession(pendingSession: PendingSession, callback: () -> Unit)
+    suspend fun getSession(intent: Intent?, callback: () -> Unit)
 
-    suspend fun getExchangeToken(audience: String, scope: Set<String>): Pair<Token?, String?>
+    suspend fun getApicAccessToken(mediation: SessionMediationOptions): Token?
+
+    suspend fun getRzCookie(): String?
+
+    suspend fun getExchangeToken(mediation: SessionMediationOptions): Token?
 }

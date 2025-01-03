@@ -31,7 +31,7 @@ import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.showToast
 import jp.co.rakuten.sps.web.model.auth.SpsCompatToken
 import kotlinx.coroutines.launch
-import r10.one.auth.pendingSession
+import r10.one.auth.session.mediateAndResume
 
 /**
  * In order to use the RakutenReward SDK, you need to use one of these options to start SDK session:
@@ -94,14 +94,14 @@ class MainActivity : RakutenRewardBaseActivity() {
 
     private fun checkLoginStatus() {
         loginViewModel.isLoggedInLiveData.observeOnce(this) {
-            if (it) loginViewModel.getExchangeToken()
+            if (it) loginViewModel.getAccessToken(mediateAndResume)
         }
         loginViewModel.isLoggedIn()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent.pendingSession?.let { loginViewModel.authenticate(it) }
+        loginViewModel.authenticate(intent)
     }
 
     private fun setObserver() {
@@ -110,9 +110,6 @@ class MainActivity : RakutenRewardBaseActivity() {
             RakutenReward.setRIdToken(it)
             // start session after setting the token
             RakutenReward.startSession()
-        }
-        loginViewModel.exchangeTokenLiveData.observe(this) {
-            loginViewModel.getAccessToken(this, it)
         }
         loginViewModel.rzCookieLiveData.observe(this) {
             // use the following API to set the rz cookie

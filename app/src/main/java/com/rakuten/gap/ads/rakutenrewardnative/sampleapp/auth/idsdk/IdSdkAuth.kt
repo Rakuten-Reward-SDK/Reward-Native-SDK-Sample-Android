@@ -1,24 +1,25 @@
 package com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.idsdk
 
-import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_MUTABLE
+import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
-import androidx.fragment.app.FragmentActivity
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.IAuthService
+import kotlinx.coroutines.withTimeout
 import r10.one.auth.Client
-import r10.one.auth.MediationOptions
-import r10.one.auth.PendingSession
-import r10.one.auth.Session
-import r10.one.auth.SessionRequest
+import r10.one.auth.Error
+import r10.one.auth.MediationRequiredError
+import r10.one.auth.NetworkError
+import r10.one.auth.RequestError
 import r10.one.auth.Token
-import r10.one.auth.artifacts
+import r10.one.auth.apic.apic
 import r10.one.auth.defaultClient
-import r10.one.auth.exchangeToken
-import r10.one.auth.rzCookie
-import r10.one.auth.sessionRequest
-import java.lang.ref.WeakReference
+import r10.one.auth.environment.RakutenEnv
+import r10.one.auth.providers.artifacts
+import r10.one.auth.providers.cookie
+import r10.one.auth.providers.token
+import r10.one.auth.session.SessionMediationOptions
+import r10.one.auth.session.sessionContainer
+import r10.one.auth.session.sessionUpdated
 
 /**
  *
@@ -26,12 +27,12 @@ import java.lang.ref.WeakReference
  * Created on 2024/10/28
  * Copyright © 2024 Rakuten Asia. All rights reserved.
  */
-class IdSdkAuth private constructor(activity: FragmentActivity) : IAuthService {
+class IdSdkAuth private constructor(context: Context) : IAuthService {
     companion object {
         private lateinit var instance: IdSdkAuth
 
-        fun initClient(activity: FragmentActivity) {
-            instance = IdSdkAuth(activity)
+        fun initClient(context: Context) {
+            instance = IdSdkAuth(context)
         }
 
         fun getInstance(): IdSdkAuth {
@@ -39,40 +40,41 @@ class IdSdkAuth private constructor(activity: FragmentActivity) : IAuthService {
         }
     }
 
-    private val activityWeakRef: WeakReference<FragmentActivity> = WeakReference(activity)
-    private val client: Client = defaultClient(activity) {
+    private val client: Client = defaultClient(context) {
         clientId = IdSdkConst.CLIENT_ID
         serviceUrl = IdSdkConst.SERVICE_URL
         securityPolicy { disableUserPresence() }
     }
-    private var session: Session? = null
-    private val sessionRequest: SessionRequest by lazy {
-        sessionRequest { }
-    }
 
-    override suspend fun login() {
-        activityWeakRef.get()?.let { activity ->
-            val completionIntent = Intent(activity, activity::class.java)
-            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                FLAG_MUTABLE
-            } else {
-                0
-            }
-            client.session(
-                sessionRequest, activity, MediationOptions(
-                    complete = PendingIntent.getActivity(activity, 0, completionIntent, flags),
-                    failure = PendingIntent.getActivity(activity, 0, completionIntent, flags)
-                )
-            )
-        }
+    private val sessionProvider = sessionContainer(client)
+
+    private val accessTokenForMission = sessionProvider.artifacts.apic {
+        env = RakutenEnv.PROD
+        scope = setOf(IdSdkConst.SCOPES_MISSION)
+        tokenEndpoint = IdSdkConst.TOKEN_ENDPOINT
+        tokenTtlSeconds = 3600
+    }.provider()
+
+    private val rzCookie = sessionProvider.artifacts.rzCookie.provider()
+
+    private val exchangeTokenForSps = sessionProvider.artifacts.exchangeToken {
+        audience = IdSdkConst.AUDIENCE_SPS
+        scope = IdSdkConst.SCOPES_SPS.split(",").toSet()
+    }.provider()
+
+    override suspend fun login(mediation: SessionMediationOptions) {
+        sessionProvider.session(mediation)
     }
 
     override suspend fun logout() {
-        try {
-            session?.logout()
-            session = null
-        } catch (e: Exception) {
-            Log.d("IdSdkAuth", "Logging out failed: $e")
+        val session = sessionProvider.session
+        if (session == null) {
+            Log.d("IdSdkAuth", "User not authenticated")
+            return
+        }
+
+        showErrors("Cannot Logout") {
+            session.logout()
         }
     }
 
@@ -80,51 +82,74 @@ class IdSdkAuth private constructor(activity: FragmentActivity) : IAuthService {
      * Check if there is a valid session.
      */
     override suspend fun isLoggedIn(): Boolean {
-        if (session != null) {
-            return true
+        val session = showErrors("Check local session failed") {
+            sessionProvider.session(SessionMediationOptions.NO_MEDIATION)
         }
 
-        try {
-            session = client.session(sessionRequest)
-            return true
-        } catch (e: Exception) {
-            Log.d("IdSdkAuth", "Checking is there valid session: $e")
-            return false
-        }
+        return session != null
     }
 
-    override suspend fun getSession(pendingSession: PendingSession, callback: () -> Unit) {
-        try {
-            session = client.session(pendingSession)
-            callback()
-        } catch (e: Exception) {
-            Log.d("IdSdkAuth", "Getting session: $e")
+    /**
+     * After logged in from OMNI UI, call this method to check the session.
+     */
+    override suspend fun getSession(intent: Intent?, callback: () -> Unit) {
+        if (intent?.sessionUpdated == true) {
+            withTimeout(1_000) {
+                while (sessionProvider.session == null) {
+                    /* Wait for session */
+                }
+
+                if (sessionProvider.session != null) {
+                    callback()
+                }
+            }
         }
     }
 
     /**
-     * Get exchange token.
-     *
-     * @return Pair<Token?, String?> - exchange token, rz cookie
+     * Get API-C access token
      */
-    override suspend fun getExchangeToken(
-        audience: String,
-        scope: Set<String>
-    ): Pair<Token?, String?> {
-        try {
-            val artifactResponse = session?.artifacts {
-                +exchangeToken {
-                    this.audience = audience
-                    this.scope = scope
-                }
-                +rzCookie()
-            }
+    override suspend fun getApicAccessToken(mediation: SessionMediationOptions): Token? {
+        val token = accessTokenForMission.token(mediation).onFailure {
+            Log.w("IdSdkAuth", "Failed to get access token", it)
+        }.getOrNull()
 
-            val exchangeToken = artifactResponse?.exchangeToken(audience)
-            val rzCookie = artifactResponse?.rzCookie
-            return Pair(exchangeToken, rzCookie)
-        } catch (e: Exception) {
-            return Pair(null, null)
-        }
+        return token
     }
+
+    /**
+     * Get RZ cookie
+     */
+    override suspend fun getRzCookie(): String? {
+        val cookie = rzCookie.cookie(SessionMediationOptions.NO_MEDIATION).onFailure {
+            Log.w("IdSdkAuth", "Failed to get rz cookie", it)
+        }.getOrNull()
+
+        return cookie?.value
+    }
+
+    override suspend fun getExchangeToken(mediation: SessionMediationOptions): Token? {
+        val token = exchangeTokenForSps.token(mediation).onFailure {
+            Log.w("IdSdkAuth", "Failed to get exchange token", it)
+        }.getOrNull()
+
+        return token
+    }
+
+    private suspend fun <T> showErrors(prefix: String, block: suspend () -> T): T? =
+        try {
+            block()
+        } catch (e: NetworkError) {
+            Log.w(prefix, "NetworkError", e)
+            null
+        } catch (e: RequestError) {
+            Log.w(prefix, "RequestError", e)
+            null
+        } catch (e: MediationRequiredError) {
+            Log.w(prefix, "MediationRequiredError", e)
+            null
+        } catch (e: Error) {
+            Log.w(prefix, "Error", e)
+            null
+        }
 }

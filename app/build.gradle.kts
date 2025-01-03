@@ -67,7 +67,7 @@ dependencies {
 
     // ID SDK
     implementation(libs.idsdk.core)
-    implementation(libs.volley)
+    implementation(libs.idsdk.apic)
 
     //====== Jetpack Navigation ============
     implementation(libs.androidx.navigation.fragment.ktx)
