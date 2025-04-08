@@ -17,7 +17,7 @@ import com.rakuten.gap.ads.mission_sps.listener.SpsMissionListener
  */
 class MissionSpsManager : SpsMissionListener {
     init {
-        RakutenMissionSps.INSTANCE.setSpsMissionListener(this)
+        RakutenMissionSps.setSpsMissionListener(this)
     }
 
     val currentTheme: String
