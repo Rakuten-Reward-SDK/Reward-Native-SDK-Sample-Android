@@ -18,10 +18,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.ui.theme.AppTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,14 +52,12 @@ abstract class ChallengeCustomMissionActivity : ComponentActivity(), RakutenRewa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
-                Surface {
-                    MainScreen(
-                        title = toolbarTitle(),
-                        onClose = { finish() },
-                        onButtonClick = ::logAction
-                    )
-                }
+            AppTheme {
+                MainScreen(
+                    title = toolbarTitle(),
+                    onClose = { finish() },
+                    onButtonClick = ::logAction
+                )
             }
         }
     }

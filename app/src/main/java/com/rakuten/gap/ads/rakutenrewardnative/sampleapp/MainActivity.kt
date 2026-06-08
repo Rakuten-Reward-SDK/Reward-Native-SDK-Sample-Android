@@ -19,7 +19,6 @@ import com.rakuten.gap.ads.mission_core.Success
 import com.rakuten.gap.ads.mission_core.activity.RakutenRewardBaseActivity
 import com.rakuten.gap.ads.mission_core.api.status.RakutenRewardAPIError
 import com.rakuten.gap.ads.mission_core.listeners.RakutenRewardListener
-import com.rakuten.gap.ads.mission_core.observers.RakutenRewardManager
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardConsentStatus
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.idsdk.IdSdkAuth

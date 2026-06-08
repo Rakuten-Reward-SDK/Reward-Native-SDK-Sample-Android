@@ -11,7 +11,6 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.rakuten.gap.ads.mission_core.Failed
 import com.rakuten.gap.ads.mission_core.RakutenReward
-import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option2StartSessionActivity
@@ -31,17 +30,13 @@ class MainFragment : ListFragment() {
     private val features: List<FeatureItem> by lazy {
         listOf(
             FeatureItem("Login") { navigate(MainFragmentDirections.goToLoginFragment()) },
-            FeatureItem("SDK Portal") { checkSdkStatus { launchSDKPortal() } },
-            FeatureItem("Missions") { checkSdkStatus { navigate(MainFragmentDirections.goToMissionsFragment()) } },
+            FeatureItem("SDK Portal") { launchSDKPortal() },
+            FeatureItem("Missions") { navigate(MainFragmentDirections.goToMissionsFragment()) },
             FeatureItem(getString(R.string.title_option2)) {
-                checkSdkStatus {
-                    requireContext().justStart(Option2StartSessionActivity::class.java)
-                }
+                requireContext().justStart(Option2StartSessionActivity::class.java)
             },
             FeatureItem(getString(R.string.title_option3)) {
-                checkSdkStatus {
-                    requireContext().justStart(Option3StartSessionActivity::class.java)
-                }
+                requireContext().justStart(Option3StartSessionActivity::class.java)
             }
         )
     }
@@ -84,15 +79,6 @@ class MainFragment : ListFragment() {
 
     private fun navigate(directions: NavDirections) {
         findNavController().navigate(directions)
-    }
-
-    private inline fun checkSdkStatus(callback: () -> Unit) {
-        if (RakutenReward.status == RakutenRewardSDKStatus.ONLINE) {
-            callback()
-        } else {
-            requireContext().showToast("Please login first")
-        }
-        callback()
     }
 }
 
