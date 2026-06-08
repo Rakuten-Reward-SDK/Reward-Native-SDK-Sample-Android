@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.ui.theme.AppTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,7 +62,7 @@ class MissionDetailsFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                MaterialTheme {
+                AppTheme {
                     MissionDetailsScreen(viewModel)
                 }
             }
@@ -191,7 +192,7 @@ class MissionDetailsFragment : Fragment() {
     @Preview(showBackground = true)
     @Composable
     fun PreviewDetail() {
-        MaterialTheme {
+        AppTheme {
             MissionDetails(
                 MissionData(
                     "Mission 1",
