@@ -92,6 +92,7 @@ class MainFragment : ListFragment() {
         } else {
             requireContext().showToast("Please login first")
         }
+        callback()
     }
 }
 

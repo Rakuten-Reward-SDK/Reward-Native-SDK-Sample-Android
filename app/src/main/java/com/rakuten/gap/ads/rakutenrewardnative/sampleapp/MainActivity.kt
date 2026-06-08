@@ -49,7 +49,6 @@ class MainActivity : RakutenRewardBaseActivity() {
     }
 
     private val idSdkAuth: IdSdkAuth by lazy {
-        IdSdkAuth.initClient(this)
         IdSdkAuth.getInstance()
     }
 
@@ -63,7 +62,7 @@ class MainActivity : RakutenRewardBaseActivity() {
 
         setSupportActionBar(findViewById(R.id.toolbar))
         val host: NavHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment?
                 ?: return
 
         val navController = host.navController
@@ -75,7 +74,7 @@ class MainActivity : RakutenRewardBaseActivity() {
 
     private fun checkLoginStatus() {
         loginViewModel.isLoggedInLiveData.observeOnce(this) {
-            if (it) loginViewModel.getAccessToken(mediateAndResume)
+            if (it) RakutenReward.startSession()
         }
         loginViewModel.isLoggedIn()
     }
@@ -86,12 +85,6 @@ class MainActivity : RakutenRewardBaseActivity() {
     }
 
     private fun setObserver() {
-        loginViewModel.tokenLiveData.observe(this) {
-            // after getting the access token use the following API to set the token
-            RakutenReward.setRIdToken(it)
-            // start session after setting the token
-            RakutenReward.startSession()
-        }
         loginViewModel.rzCookieLiveData.observe(this) {
             // use the following API to set the rz cookie
             RakutenReward.setRz(it)
