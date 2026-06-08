@@ -16,15 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.rakuten.gap.ads.mission_core.data.MissionLiteData
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.ui.theme.AppTheme
 
 /**
  *
@@ -42,7 +41,7 @@ class MissionsFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                MaterialTheme {
+                AppTheme {
                     MissionsScreen(viewModel)
                 }
             }
@@ -62,7 +61,7 @@ class MissionsFragment : Fragment() {
                         viewModel.getMissionDetails(mission.actionCode.toString())
                         findNavController().navigate(MissionsFragmentDirections.goToMissionDetailsFragment())
                     }
-                    Divider(color = Color.LightGray, thickness = 1.dp)
+                    Divider(thickness = 1.dp)
                 }
             }
         }
@@ -92,7 +91,7 @@ class MissionsFragment : Fragment() {
     @Preview(showBackground = true)
     @Composable
     fun PreviewMissionItem() {
-        MaterialTheme {
+        AppTheme {
             MissionItem(
                 MissionLiteData(
                     "Mission 1",

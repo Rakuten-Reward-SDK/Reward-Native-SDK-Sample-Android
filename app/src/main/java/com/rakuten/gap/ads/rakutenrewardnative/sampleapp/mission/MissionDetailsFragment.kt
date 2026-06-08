@@ -44,6 +44,7 @@ import coil3.request.placeholder
 import com.rakuten.gap.ads.mission_core.data.MissionData
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.MainActivity
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.R
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.ui.theme.AppTheme
 
 /**
  *
@@ -61,7 +62,7 @@ class MissionDetailsFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                MaterialTheme {
+                AppTheme {
                     MissionDetailsScreen(viewModel)
                 }
             }
@@ -191,7 +192,7 @@ class MissionDetailsFragment : Fragment() {
     @Preview(showBackground = true)
     @Composable
     fun PreviewDetail() {
-        MaterialTheme {
+        AppTheme {
             MissionDetails(
                 MissionData(
                     "Mission 1",

@@ -19,7 +19,6 @@ import com.rakuten.gap.ads.mission_core.Success
 import com.rakuten.gap.ads.mission_core.activity.RakutenRewardBaseActivity
 import com.rakuten.gap.ads.mission_core.api.status.RakutenRewardAPIError
 import com.rakuten.gap.ads.mission_core.listeners.RakutenRewardListener
-import com.rakuten.gap.ads.mission_core.observers.RakutenRewardManager
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardConsentStatus
 import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.mission_sps.api.RakutenMissionSps
@@ -31,7 +30,6 @@ import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.openDialog
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.showToast
 import jp.co.rakuten.sps.web.model.auth.SpsCompatToken
 import kotlinx.coroutines.launch
-import r10.one.auth.session.mediateAndResume
 
 /**
  * In order to use the RakutenReward SDK, you need to use one of these options to start SDK session:
@@ -53,7 +51,6 @@ class MainActivity : RakutenRewardBaseActivity() {
     }
 
     private val idSdkAuth: IdSdkAuth by lazy {
-        IdSdkAuth.initClient(this)
         IdSdkAuth.getInstance()
     }
 
@@ -69,7 +66,7 @@ class MainActivity : RakutenRewardBaseActivity() {
 
         setSupportActionBar(findViewById(R.id.toolbar))
         val host: NavHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment?
                 ?: return
 
         val navController = host.navController
@@ -94,7 +91,7 @@ class MainActivity : RakutenRewardBaseActivity() {
 
     private fun checkLoginStatus() {
         loginViewModel.isLoggedInLiveData.observeOnce(this) {
-            if (it) loginViewModel.getAccessToken(mediateAndResume)
+            if (it) RakutenReward.startSession()
         }
         loginViewModel.isLoggedIn()
     }
@@ -105,12 +102,6 @@ class MainActivity : RakutenRewardBaseActivity() {
     }
 
     private fun setObserver() {
-        loginViewModel.tokenLiveData.observe(this) {
-            // after getting the access token use the following API to set the token
-            RakutenReward.setRIdToken(it)
-            // start session after setting the token
-            RakutenReward.startSession()
-        }
         loginViewModel.rzCookieLiveData.observe(this) {
             // use the following API to set the rz cookie
             RakutenReward.setRz(it)

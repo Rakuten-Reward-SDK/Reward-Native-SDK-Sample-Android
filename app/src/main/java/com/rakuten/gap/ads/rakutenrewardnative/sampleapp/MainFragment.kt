@@ -7,18 +7,20 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.fragment.app.ListFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.rakuten.gap.ads.mission_core.Failed
 import com.rakuten.gap.ads.mission_core.RakutenReward
-import com.rakuten.gap.ads.mission_core.status.RakutenRewardSDKStatus
 import com.rakuten.gap.ads.mission_sps.api.openSpsPortal
 import com.rakuten.gap.ads.mission_ui.api.activity.openSDKPortal
+import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.auth.idsdk.IdSdkAuth
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.databinding.FragmentMainBinding
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option2StartSessionActivity
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option3StartSessionActivity
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.justStart
 import com.rakuten.gap.ads.rakutenrewardnative.sampleapp.util.showToast
+import kotlinx.coroutines.launch
 
 /**
  *
@@ -32,22 +34,16 @@ class MainFragment : ListFragment() {
     private val features: List<FeatureItem> by lazy {
         listOf(
             FeatureItem("Login") { navigate(MainFragmentDirections.goToLoginFragment()) },
-            FeatureItem("SPS Portal") { checkSdkStatus { launchSpsPortal() } },
-            FeatureItem("Missions") { checkSdkStatus { navigate(MainFragmentDirections.goToMissionsFragment()) } },
+            FeatureItem("SPS Portal") { launchSpsPortal() },
+            FeatureItem("Missions") { navigate(MainFragmentDirections.goToMissionsFragment()) },
             FeatureItem(getString(R.string.title_option2)) {
-                checkSdkStatus {
-                    requireContext().justStart(Option2StartSessionActivity::class.java)
-                }
+                requireContext().justStart(Option2StartSessionActivity::class.java)
             },
             FeatureItem(getString(R.string.title_option3)) {
-                checkSdkStatus {
-                    requireContext().justStart(Option3StartSessionActivity::class.java)
-                }
+                requireContext().justStart(Option3StartSessionActivity::class.java)
             },
             FeatureItem(getString(R.string.label_mission_sps_api)) {
-                checkSdkStatus {
-                    navigate(MainFragmentDirections.goToMissionSpsApiFragment())
-                }
+                navigate(MainFragmentDirections.goToMissionSpsApiFragment())
             },
         )
     }
@@ -57,18 +53,23 @@ class MainFragment : ListFragment() {
      * NOT [RakutenReward.openSDKPortal] API
      */
     private fun launchSpsPortal() {
-        RakutenReward.openSpsPortal(
-            isPortalOpenedCallback = {
-                // this callback is to check whether the portal is opened or not
-                if (it is Failed) {
-                    requireContext().showToast("Failed to open SPS Portal [${it.error}]")
+        lifecycleScope.launch {
+            val rz = IdSdkAuth.getInstance().getRzCookie()
+            RakutenReward.openSpsPortal(
+                rz = rz ?: "",
+                isPortalOpenedCallback = {
+                    // this callback is to check whether the portal is opened or not
+                    if (it is Failed) {
+                        requireContext().showToast("Failed to open SPS Portal [${it.error}]")
+                    }
+                },
+                activityResultCallback = {
+                    // if you have a mission which require user to open the Reward SDK portal,
+                    // we recommend to log action after user close the portal
                 }
-            },
-            activityResultCallback = {
-                // if you have a mission which require user to open the Reward SDK portal,
-                // we recommend to log action after user close the portal
-            }
-        )
+            )
+        }
+
     }
 
     override fun onCreateView(
@@ -94,14 +95,6 @@ class MainFragment : ListFragment() {
 
     private fun navigate(directions: NavDirections) {
         findNavController().navigate(directions)
-    }
-
-    private inline fun checkSdkStatus(callback: () -> Unit) {
-        if (RakutenReward.status == RakutenRewardSDKStatus.ONLINE) {
-            callback()
-        } else {
-            requireContext().showToast("Please login first")
-        }
     }
 }
 

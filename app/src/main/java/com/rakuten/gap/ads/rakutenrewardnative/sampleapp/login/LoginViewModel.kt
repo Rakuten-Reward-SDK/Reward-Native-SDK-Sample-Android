@@ -54,7 +54,7 @@ class LoginViewModel(private val authService: IAuthService) : ViewModel() {
         viewModelScope.launch {
             authService.getSession(intent) {
                 _isLoggedInLiveData.postValue(true)
-                getAccessToken(SessionMediationOptions.NO_MEDIATION)
+                getRzCookie()
             }
         }
     }
@@ -67,13 +67,10 @@ class LoginViewModel(private val authService: IAuthService) : ViewModel() {
         return exchangeToken?.value
     }
 
-    fun getAccessToken(mediation: SessionMediationOptions) {
+    fun getRzCookie() {
         viewModelScope.launch {
             authService.getRzCookie()?.let {
                 _rzCookieLiveData.postValue(it)
-            }
-            authService.getApicAccessToken(mediation)?.let {
-                _tokenLiveData.postValue(it.value)
             }
         }
     }
