@@ -24,6 +24,7 @@
         </activity>
         <activity android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option2StartSessionActivity" />
         <activity android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.start.Option3StartSessionActivity" />
+        <activity android:name="com.rakuten.gap.ads.rakutenrewardnative.sampleapp.extension.JsExtensionActivity" />
 
         <!-- Reward SDK Application Key -->
         <meta-data

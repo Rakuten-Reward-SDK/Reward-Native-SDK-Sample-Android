@@ -28,7 +28,7 @@ class MissionViewModel: ViewModel() {
         getMissions()
     }
 
-    private fun getMissions() {
+    fun getMissions() {
         viewModelScope.launch {
             when (val missionList = RakutenRewardCoroutine.getMissionsLite()) {
                 is Failed -> _missions.value = emptyList()

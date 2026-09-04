@@ -63,6 +63,7 @@ dependencies {
     implementation(platform(libs.rewardsdknative.bom))
     implementation(libs.rewardsdknative.ui)
     implementation(libs.rewardsdknative.core)
+    implementation(libs.rewardsdknative.ext)
 
     //====== Jetpack Navigation ============
     implementation(libs.androidx.navigation.fragment.ktx)
