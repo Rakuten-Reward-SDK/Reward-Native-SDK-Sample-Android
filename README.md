@@ -15,10 +15,7 @@ We provide several SDKs for different use cases as well as different login optio
 
 | Branch | Description | Current Branch |
 | --- | --- | ---- |
-| **main** | This is the default branch to demo the basic API usage and <code>RakuteAuth</code> login options | ✅ |  
-| login/rae | This branch is for application which uses RAE token |  |  
-| login/rid | This branch is for application which uses RID token |  |  
-| feature/saas-sdk | This branch demonstrates the usage of Saas SDK |  |  
+| **main** | This is the default branch to demo the basic API usage and <code>RakuteAuth</code> login options | ✅ |
 | feature/js-ext | This branch demonstrates the usage of JavaScript Extension SDK |  |  
 
 ## Secrets Gradle Plugin  
